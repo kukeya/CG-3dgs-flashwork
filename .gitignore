@@ -1,0 +1,36 @@
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# Local/runtime files
+__pycache__/
+*.pyc
+.venv/
+.claude/
+.codex/
+.agents/
+
+# Research workspace artifacts not needed by the static GitHub Pages site
+baselines/
+configs/
+datasets/
+/docs/
+envs/
+figures/
+logs/
+outputs/
+paper/
+results/
+scripts/
+src/
+tables/
+tests/
+CLAUDE.md
+main_zh_paix_method.tex
+requirements.txt
+
+# Keep deployable static assets, including videos.
+!assets/
+!assets/videos/

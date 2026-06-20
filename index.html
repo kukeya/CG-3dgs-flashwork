@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>3DGS 机器人数字孪生中的动作后果验证</title>
+    <meta
+      name="description"
+      content="3DGS 机器人数字孪生中候选动作任务后果验证、诊断重放与 PAEC 校正实验项目页。"
+    />
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav">
+        <a class="brand" href="#top">3DGS 动作后果验证</a>
+        <div class="nav-links" aria-label="页面导航">
+          <a href="#intro">项目介绍</a>
+          <a href="#evidence">诊断实验</a>
+          <a href="#correction">校正实验</a>
+          <a href="#resources">资源</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section id="intro" class="hero text-only-hero">
+        <div class="hero-text">
+          <p class="eyebrow">3DGS 机器人数字孪生 · 动作后果验证</p>
+          <h1>视觉合理性不等于物理任务后果一致性</h1>
+          <p class="lead">
+            本项目研究 3DGS 机器人数字孪生中的候选动作任务后果验证。核心问题是：
+            一个演示在视觉上看起来成功、在运动学标签上被标记为成功，并不保证同一条动作轨迹在物理执行中也会产生预期任务后果。
+          </p>
+          <p class="lead">
+            页面目前展示两类已有视频证据：一类是“相同视觉、不同物理”的诊断重放，
+            用于说明隐藏物理属性会改变执行后果；另一类是图八对应的 PAEC 校正前后物理重放，
+            用于展示按失败机制路由的动作校正如何修复滑移、弱抓取和倾覆。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#evidence">查看诊断视频</a>
+            <a class="button" href="#correction">查看校正视频</a>
+            <a class="button" href="./assets/papers/paper-zh.pdf">中文论文草稿</a>
+            <a class="button" href="./assets/papers/paper-en.pdf">English Draft</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="summary-strip" aria-label="项目核心问题">
+        <div>
+          <span class="stat">候选动作</span>
+          <span class="label">给定 3DGS 场景、任务目标和待执行动作</span>
+        </div>
+        <div>
+          <span class="stat">隐藏物理</span>
+          <span class="label">摩擦、质量、质心和接触几何不由视觉外观唯一决定</span>
+        </div>
+        <div>
+          <span class="stat">后果验证</span>
+          <span class="label">判断动作是否会实现稳定抓取、抬升和任务谓词</span>
+        </div>
+        <div>
+          <span class="stat">动作校正</span>
+          <span class="label">根据失败机制选择最小必要校正，而不是统一保守化</span>
+        </div>
+      </section>
+
+      <section id="evidence" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">4.3 诊断视频</p>
+          <h2>相同视觉与轨迹，不同隐藏物理后果</h2>
+          <p>
+            下列视频用于支撑“相同视觉、不同物理”诊断。所有视频都来自同一 PhysX
+            物理重放设置，使用同一条 RoboSplat 生成的机器人轨迹；实验只改变隐藏物理属性，
+            因而可以直接观察视觉/运动学成功标签与物理任务后果之间的差异。
+          </p>
+        </div>
+
+        <div class="case-grid compact-cases">
+          <article class="media-card success">
+            <video controls muted loop playsinline preload="metadata">
+              <source src="./assets/videos/demo52-mu1-0-200g-success.mp4" type="video/mp4" />
+            </video>
+            <div class="card-body">
+              <p class="tag">标称成功</p>
+              <h3>正常摩擦与质量下稳定抬升</h3>
+              <p>
+                物理代理在标称摩擦、质量、质心和接触几何下被稳定抬起。
+              </p>
+            </div>
+          </article>
+
+          <article class="media-card fail">
+            <video controls muted loop playsinline preload="metadata">
+              <source src="./assets/videos/demo52-mu0-1-200g-fail.mp4" type="video/mp4" />
+            </video>
+            <div class="card-body">
+              <p class="tag">低摩擦失败</p>
+              <h3>同一动作在低摩擦下滑移</h3>
+              <p>
+                机器人轨迹不变，仅降低摩擦后，物体在物理重放中无法稳定抬升。
+              </p>
+            </div>
+          </article>
+
+          <article class="media-card fail">
+            <video controls muted loop playsinline preload="metadata">
+              <source src="./assets/videos/demo52-com15mm-fail.mp4" type="video/mp4" />
+            </video>
+            <div class="card-body">
+              <p class="tag">质心偏移失败</p>
+              <h3>同一动作在质心偏移下倾斜掉落</h3>
+              <p>
+                隐藏质心偏移在物理重放中造成力矩不平衡，导致倾斜和掉落。
+              </p>
+            </div>
+          </article>
+
+          <article class="media-card fail">
+            <video controls muted loop playsinline preload="metadata">
+              <source src="./assets/videos/demo52-mu0-3-400g-fail.mp4" type="video/mp4" />
+            </video>
+            <div class="card-body">
+              <p class="tag">高质量失败</p>
+              <h3>同一动作在较大质量下弱抓取</h3>
+              <p>
+                物体质量增大后，同一抓取轨迹无法提供足够稳定的抬升效果。
+              </p>
+            </div>
+          </article>
+
+          <article class="media-card success">
+            <video controls muted loop playsinline preload="metadata">
+              <source src="./assets/videos/demo52-mu0-1-200g-100n-success.mp4" type="video/mp4" />
+            </video>
+            <div class="card-body">
+              <p class="tag">理想强夹持</p>
+              <h3>100N 夹持掩盖低摩擦失败</h3>
+              <p>
+                同一低摩擦设置在过强夹持下成功，说明理想化物理参数会掩盖问题。
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="correction" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">图八视频</p>
+          <h2>PAEC 校正前后物理重放</h2>
+          <p>
+            图八展示的是校正闭环实验中的代表性物理重放。每组包含校正前的原始动作和
+            PAEC 选择的校正动作：低摩擦与大质量失败主要通过夹持力校正修复，质心偏移导致的倾覆则通过抓取点偏移修复。
+            这些视频展示的是同一类实验内的前后对比，不混合不同实验来源。
+          </p>
+        </div>
+
+        <div class="comparison-list">
+          <article class="comparison-row">
+            <div class="comparison-copy">
+              <p class="tag">低摩擦</p>
+              <h3>滑移失败通过夹持力校正修复</h3>
+              <p>
+                原始动作在低摩擦下发生滑移，PAEC 将失败诊断为法向力不足相关问题，并选择增加夹持力的校正动作。
+              </p>
+            </div>
+            <div class="comparison-videos">
+              <figure>
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/low-friction-demo99-before.mp4" type="video/mp4" />
+                </video>
+                <figcaption>校正前：低摩擦下滑移失败</figcaption>
+              </figure>
+              <figure>
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/low-friction-demo99-after.mp4" type="video/mp4" />
+                </video>
+                <figcaption>校正后：增加夹持力后稳定抬升</figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <article class="comparison-row">
+            <div class="comparison-copy">
+              <p class="tag">大质量</p>
+              <h3>弱抓取通过夹持力校正修复</h3>
+              <p>
+                物体质量增大后，原始动作无法稳定保持物体；PAEC 选择与失败机制匹配的夹持力校正，而不是改变整条轨迹。
+              </p>
+            </div>
+            <div class="comparison-videos">
+              <figure>
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/heavy-mass-demo97-before.mp4" type="video/mp4" />
+                </video>
+                <figcaption>校正前：大质量下弱抓取或掉落</figcaption>
+              </figure>
+              <figure>
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/heavy-mass-demo97-after.mp4" type="video/mp4" />
+                </video>
+                <figcaption>校正后：夹持力校正后稳定抬升</figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <article class="comparison-row">
+            <div class="comparison-copy">
+              <p class="tag">质心偏移</p>
+              <h3>倾覆失败需要抓取点偏移</h3>
+              <p>
+                质心偏移产生的是力矩驱动的倾覆问题，单纯“抓得更紧”并不充分；
+                PAEC 将校正路由到抓取点偏移，使抓取位置更接近有效支撑区域。
+              </p>
+            </div>
+            <div class="comparison-videos">
+              <figure>
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/com-offset-demo99-before.mp4" type="video/mp4" />
+                </video>
+                <figcaption>校正前：质心偏移下倾覆失败</figcaption>
+              </figure>
+              <figure>
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="./assets/videos/com-offset-demo99-after.mp4" type="video/mp4" />
+                </video>
+                <figcaption>校正后：抓取点偏移后稳定抬升</figcaption>
+              </figure>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="resources" class="section resources">
+        <div>
+          <p class="eyebrow">资源</p>
+          <h2>论文草稿与实验记录</h2>
+          <p>
+            页面中的视频覆盖诊断实验和校正闭环实验。论文草稿、4.3 诊断记录与 PAEC 校正记录可从下方进入。
+          </p>
+        </div>
+        <div class="resource-links">
+          <a href="./assets/papers/paper-zh.pdf">中文论文草稿</a>
+          <a href="./assets/papers/paper-en.pdf">English Draft</a>
+          <a href="./assets/docs/same-visual-diff-physics-results.md">4.3 诊断记录</a>
+          <a href="./assets/docs/paec-correction-results.md">PAEC 校正记录</a>
+          <a href="./assets/docs/robosplat-consistency-results.md">位姿重放记录</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>
+        静态项目页，可通过 GitHub Actions 自动部署到 GitHub Pages。
+      </p>
+    </footer>
+  </body>
+</html>
